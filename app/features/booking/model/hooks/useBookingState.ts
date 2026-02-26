@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BookingFormData } from "../../model/booking.types";
+import { BookingFormData } from "../booking.types";
 
 export const useBookingState = () => {
     const [data, setData] = useState<BookingFormData | null>(null);

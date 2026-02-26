@@ -1,6 +1,6 @@
 import { useState } from "react"
 import BookingModal from "../BookingModal/BookingModal";
-import { useBookingState } from "../hooks/useBookingState";
+import { useBookingState } from "../../model/hooks/useBookingState";
 import { BookingFormData } from "../../model/booking.types";
 
 const BookingPanel = () => {
