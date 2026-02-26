@@ -9,4 +9,5 @@ export type BookingFormData = {
     startDate: Date;
     endDate: Date;
     guests: GuestCount;
+    rooms: number;
 }
