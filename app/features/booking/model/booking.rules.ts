@@ -1,4 +1,4 @@
-import { GuestCount } from "./booking.types";
+import { Guests } from "./booking.types";
 
 const normalize = (date: Date) =>
     new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -15,8 +15,8 @@ export const isDateValid = (
     return endDay > startDay;
 }
 
-export const isGuestsValid = (guests: GuestCount) => {
-    const errors: Partial<Record<keyof GuestCount, string>> = {}
+export const isGuestsValid = (guests: Guests) => {
+    const errors: Partial<Record<keyof Guests, string>> = {}
 
     const { adults, children7to17, childrenUnder7 } = guests;
 
