@@ -1,4 +1,4 @@
-export type GuestCount = {
+export type Guests = {
     adults: number;
     childrenUnder7: number;
     children7to17: number;
@@ -6,8 +6,8 @@ export type GuestCount = {
 
 
 export type BookingFormData = {
-    startDate: Date;
-    endDate: Date;
-    guests: GuestCount;
+    startDate: Date | null;
+    endDate: Date | null;
+    guests: Guests;
     rooms: number;
 }
