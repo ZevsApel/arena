@@ -1,7 +1,10 @@
 import { Guests } from "./booking.types";
 
-const normalize = (date: Date) =>
+export const normalize = (date: Date) =>
     new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+export const normalizeMonthStart = (date: Date): Date => 
+    new Date(date.getFullYear(), date.getMonth(), 1);
 
 export const isDateValid = (
     start: Date | null,
