@@ -1,5 +1,7 @@
 import { Guests } from "./booking.types";
 
+// Проверки для даты
+
 export const normalize = (date: Date) =>
     new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
@@ -17,6 +19,36 @@ export const isDateValid = (
 
     return endDay > startDay;
 }
+
+export const isSelectableDate = (
+    year: number,
+    month: number,
+    day: number,
+    maxDate: Date
+): boolean => {
+    const today = normalize(new Date());
+    const current = new Date(year, month, day);
+
+    return current >= today && current <= normalize(maxDate);
+};
+
+export const isTodayDate = (date: Date) => {
+    const today = new Date();
+
+    return date === today;
+}
+
+export const isDateInRange = (date: Date, start: Date, end: Date) => {
+    const normalizedDate = normalize(date);
+    const normalizedStart = normalize(start);
+    const normalizedEnd = normalize(end);
+
+    return normalizedDate >= normalizedStart && normalizedDate <= normalizedEnd;
+}
+
+
+//////////////////////////////////////
+
 
 export const isGuestsValid = (guests: Guests) => {
     const errors: Partial<Record<keyof Guests, string>> = {}
