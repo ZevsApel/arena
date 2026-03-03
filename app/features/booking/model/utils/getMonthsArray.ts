@@ -1,6 +1,6 @@
 import { normalizeMonthStart } from "../booking.rules"
 
-const getMonthsArray = () => {
+export const getMonthsArray = () => {
     const startMonth: Date = normalizeMonthStart(new Date);
 
     const months: Date[] = [];
@@ -14,7 +14,5 @@ const getMonthsArray = () => {
         pointer = new Date(pointer.getFullYear(), pointer.getMonth() + 1, 1);
     }
 
-    return months
+    return months;
 }
-
-export default getMonthsArray();
