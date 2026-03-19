@@ -1,17 +1,25 @@
-export interface SliderProps {
+export interface Slide {
     id: number;
-    currentSlide: number;
-    onNext: () => void;
-    onPrev: () => void;
-    items: string[];
+    image: string;
+    alt: string;
 }
 
-interface SliderOptionsProps {
+export interface SliderOptions {
     gap?: number;
     slidesToShow?: number;
     slidesToScroll?: number;
 }
 
-export interface SliderOptionsData {
-    options: SliderOptionsProps;
+export interface SliderProps {
+    slides: Slide[];
+    options?: SliderOptions;
+}
+
+export interface SliderHookState {
+    current: number;
+    next: () => void;
+    prev: () => void;
+    goTo: (index: number) => void;
+    slidesToShow: number;
+    gap: number;
 }

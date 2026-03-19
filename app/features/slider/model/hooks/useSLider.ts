@@ -1,34 +1,39 @@
-import { useCallback, useState } from "react"
-import { SliderOptionsData } from "../slider.types";
+import { useCallback, useState } from "react";
+import { SliderHookState, SliderOptions } from "../slider.types";
+import { validateSliderOptions } from "../slider.rules";
 
-export const useSlider = (totalSlides: number, { options }: SliderOptionsData) => {
-    const [currentSlide, setCurrentSlide] = useState(0);
+export const useSlider = (totalSlides: number, options: SliderOptions = {}): SliderHookState => {
 
-    const [touchStart, setTouchStart] = useState<number | null>(null);
-    const [touchEnd, setTouchEnd] = useState<number | null>(null);
+    validateSliderOptions(options, totalSlides);
 
-    // Default values
-    const { gap = 0, slidesToShow = 1, slidesToScroll = 1 } = options;
+    const slidesToShow = options.slidesToShow ?? 1;
+    const slidesToScroll = options.slidesToScroll ?? 1;
+    const gap = options.gap ?? 0;
 
-    const nextSlide = useCallback(() => {
-        if (currentSlide < totalSlides - slidesToShow) {
-            setCurrentSlide(prev => Math.min(prev + slidesToScroll, totalSlides - slidesToShow));
-        } else {
-            setCurrentSlide(0);
-        }
-    }, [currentSlide, totalSlides, slidesToShow, slidesToScroll]);
+    const [current, setCurrent] = useState(0);
 
-    const prevSlide = useCallback(() => {
-        if (currentSlide > 0) {
-            setCurrentSlide(prev => Math.max(prev - slidesToScroll, 0));
-        } else {
-            setCurrentSlide(totalSlides - slidesToShow);
-        }
-    }, [currentSlide, totalSlides, slidesToShow, slidesToScroll]);
+    const next = useCallback(() => {
+        setCurrent(prev => {
+            if (prev < totalSlides - slidesToShow) {
+                return Math.min(prev + slidesToScroll, totalSlides - slidesToShow);
+            }
+            return 0;
+        });
+    }, [totalSlides, slidesToScroll, slidesToShow]);
 
-    const goToSlide = useCallback((index: number) => {
-        setCurrentSlide(Math.max(0, Math.min(index, totalSlides - slidesToShow)));
+    const prev = useCallback(() => {
+        setCurrent(prev => {
+            if (prev > 0) {
+                return Math.max(prev - slidesToScroll, 0);
+            }
+            return totalSlides - slidesToShow;
+        });
+    }, [totalSlides, slidesToScroll, slidesToShow]);
+
+    const goTo = useCallback((index: number) => {
+        if (index < 0 || index > totalSlides - slidesToShow) return;
+        setCurrent(index);
     }, [totalSlides, slidesToShow]);
 
-    return { currentSlide, nextSlide, prevSlide, goToSlide, gap, slidesToShow };
+    return { current, next, prev, goTo, slidesToShow, gap }
 }
