@@ -1,7 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Unbounded:wght@200..900&display=swap');
+
 @import "tailwindcss";
 @import 'normalize.css';
-
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Unbounded:wght@200..900&display=swap');
 
 :root {
   --black-100: #4A535F;
@@ -73,3 +73,9 @@ h4 {
   
   text-transform: uppercase;
 }
+
+
+
+.in-range { background: #e0f3ff; }
+.range-start { background: #2a8cff; color: white; }
+.range-end { background: #2a8cff; color: white; }

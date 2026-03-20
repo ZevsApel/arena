@@ -11,3 +11,9 @@ export type BookingFormData = {
     guests: Guests;
     rooms: number;
 }
+
+export interface DateRangeState {
+    inRange: boolean;
+    isStart: boolean;
+    isEnd: boolean;
+}

@@ -1,3 +1,5 @@
+'use client'
+
 import { ButtonProps } from "./Button.type";
 
 const Button = ({ text, variant, onClick }: ButtonProps) => {

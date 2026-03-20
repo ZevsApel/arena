@@ -1,24 +1,32 @@
-import { Guests } from "./booking.types";
+import { DateRangeState, Guests } from "./booking.types";
 
 // Проверки для даты
 
 export const normalize = (date: Date) =>
     new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-export const normalizeMonthStart = (date: Date): Date => 
+export const normalizeMonthStart = (date: Date): Date =>
     new Date(date.getFullYear(), date.getMonth(), 1);
 
-export const isDateValid = (
-    start: Date | null,
-    end: Date | null
-) => {
-    if(!start || !end) return false;
+export const isSameDay = (a: Date, b: Date) =>
+    normalize(a).getTime() === normalize(b).getTime();
 
-    const startDay = normalize(start);
-    const endDay = normalize(end);
+export const isAfter = (a: Date, b: Date) =>
+    normalize(a).getTime() > normalize(b).getTime();
 
-    return endDay > startDay;
-}
+export const isBefore = (a: Date, b: Date) =>
+    normalize(a).getTime() < normalize(b).getTime();
+
+export const isInRange = (date: Date, start: Date, end: Date) => {
+    const d = normalize(date).getTime();
+    const s = normalize(start).getTime();
+    const e = normalize(end).getTime();
+
+    return d >= s && d <= e;
+};
+
+export const isTodayDate = (date: Date): boolean =>
+    isSameDay(date, new Date());
 
 export const isSelectableDate = (
     year: number,
@@ -27,24 +35,51 @@ export const isSelectableDate = (
     maxDate: Date
 ): boolean => {
     const today = normalize(new Date());
-    const current = new Date(year, month, day);
+    const current = normalize(new Date(year, month, day));
 
     return current >= today && current <= normalize(maxDate);
 };
 
-export const isTodayDate = (date: Date) => {
-    const today = new Date();
 
-    return date === today;
+export const isDateValid = (
+    start: Date | null,
+    end: Date | null
+) => {
+    if (!start || !end) return false;
+
+    const startDay = normalize(start);
+    const endDay = normalize(end);
+
+    return endDay > startDay;
 }
 
-export const isDateInRange = (date: Date, start: Date, end: Date) => {
-    const normalizedDate = normalize(date);
-    const normalizedStart = normalize(start);
-    const normalizedEnd = normalize(end);
 
-    return normalizedDate >= normalizedStart && normalizedDate <= normalizedEnd;
-}
+export const getRangeState = (
+    date: Date,
+    startDate: Date | null,
+    endDate: Date | null,
+    hoverDate: Date | null
+): DateRangeState => {
+    let inRange = false;
+    let isStart = false;
+    let isEnd = false;
+
+    if (startDate && endDate) {
+        inRange = date >= startDate && date <= endDate;
+        isStart = isSameDay(date, startDate);
+        isEnd = isSameDay(date, endDate);
+    } else if (startDate && !endDate && hoverDate) {
+        const [rangeStart, rangeEnd] =
+            hoverDate > startDate ? [startDate, hoverDate] : [hoverDate, startDate];
+        inRange = date >= rangeStart && date <= rangeEnd;
+        isStart = isSameDay(date, startDate);
+        isEnd = isSameDay(date, hoverDate);
+    }
+
+    return { inRange, isStart, isEnd };
+};
+
+
 
 
 //////////////////////////////////////
@@ -55,15 +90,15 @@ export const isGuestsValid = (guests: Guests) => {
 
     const { adults, children7to17, childrenUnder7 } = guests;
 
-    if(!Number.isFinite(adults) || adults <=0) {
+    if (!Number.isFinite(adults) || adults <= 0) {
         errors.adults = "Минимум 1 взрослый"
     }
 
-    if(!Number.isFinite(childrenUnder7) || childrenUnder7 < 0) {
+    if (!Number.isFinite(childrenUnder7) || childrenUnder7 < 0) {
         errors.childrenUnder7 = "Некорректное количество"
     }
 
-    if(!Number.isFinite(children7to17) || children7to17 < 0) {
+    if (!Number.isFinite(children7to17) || children7to17 < 0) {
         errors.children7to17 = "Некорректное число"
     }
 
