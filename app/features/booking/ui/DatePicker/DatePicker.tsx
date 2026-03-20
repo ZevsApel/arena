@@ -1,27 +1,17 @@
-import { isDateInRange, isSelectableDate, isTodayDate } from "../../model/booking.rules";
+import { getRangeState, isSameDay, isSelectableDate, isTodayDate } from "../../model/booking.rules";
 import { getDaysMatrix } from "../../model/utils/getDaysMatrix";
 import { getMonthsArray } from "../../model/utils/getMonthsArray";
+import { DatePickerProps } from "./DatePicker.type";
+import DayCell from "./DayCell/DayCell";
 
-const DatePicker = () => {
-    const monthsArray = getMonthsArray();
+const DatePicker = ({ startDate, endDate, onSelectDate, onHoverDate, hoverDate }: DatePickerProps) => {
     const year = new Date().getFullYear();
+    const monthsArray = getMonthsArray();
 
     const daysOfWeek = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 
-    const monthNames = [
-        "Январь",
-        "Февраль",
-        "Март",
-        "Апрель",
-        "Май",
-        "Июнь",
-        "Июль",
-        "Август",
-        "Сентябрь",
-        "Октябрь",
-        "Ноябрь",
-        "Декабрь",
-    ];
+    const getMonthName = (date: Date) =>
+        new Intl.DateTimeFormat('ru-RU', { month: 'long' }).format(date);
 
     return (
         <div className="date-picker-container">
@@ -32,52 +22,62 @@ const DatePicker = () => {
                     <tr>
                         {daysOfWeek.map((day) => (
                             <th key={day} className="day-name">
-                                <div className="weekday-names">
-                                    {day}
-                                </div>
+                                <div className="weekday-names">{day}</div>
                             </th>
                         ))}
                     </tr>
                 </thead>
 
-                {monthsArray.map((month, monthIndex) => {
-                    const daysMatrix = getDaysMatrix(year, month.getMonth());
-
+                {monthsArray.map((month) => {
                     const monthNumber = month.getMonth();
+
+                    const daysMatrix = getDaysMatrix(year, monthNumber);
 
                     const firstDayOfMonth = new Date(year, monthNumber, 1);
                     const lastDayOfMonth = new Date(year, monthNumber + 1, 0);
 
                     return (
-                        <tbody className="weekdays-table">
+                        <tbody key={monthNumber} className="weekdays-table">
+
+                            {/* Заголовок месяца */}
+                            <tr className="month-row">
+                                <td colSpan={7} className="month-title">
+                                    {getMonthName(month)} {year}
+                                </td>
+                            </tr>
+
                             {daysMatrix.map((row, rowId) => (
                                 <tr key={rowId} className="weekdays-table-row">
                                     {row.map((day, cellId) => {
-                                        if (!day) return <td key={cellId}></td>;
-                                        
-                                        const currentDate = new Date(year, monthNumber, day);
+                                        if (!day) return <td key={cellId} />;
 
-                                        const isSeletable = isSelectableDate(year, monthNumber, day, lastDayOfMonth);
-                                        const isInRange = isDateInRange(currentDate, firstDayOfMonth, lastDayOfMonth);
+                                        const currentDate = new Date(year, monthNumber, day);
+                                        const isSelectable = isSelectableDate(year, monthNumber, day, lastDayOfMonth);
+                                        const { inRange, isStart, isEnd } = getRangeState(currentDate, startDate, endDate, hoverDate);
                                         const isToday = isTodayDate(currentDate);
 
-                                        <td key={cellId} className="weekdays-table-cell">
-                                                <div className={`
-                                                    weekday-cell
-                                                    ${!isSeletable ? "desabled" : ''}
-                                                    ${isInRange ? "selected" : ''}
-                                                    ${isToday ? "today" : ''}
-                                                `}>
-                                                    {day}
-                                                </div>
-                                        </td>
+                                        return <DayCell
+                                            key={cellId}
+                                            day={day}
+                                            currentDate={currentDate}
+                                            isSelectable={isSelectable}
+                                            isToday={isToday}
+                                            range={{ inRange, isStart, isEnd }}
+                                            onSelect={onSelectDate}
+                                            onHover={(d) => {
+                                                if (!startDate || endDate) return;
+                                                onHoverDate(d);
+                                            }}
+                                        />
                                     })}
                                 </tr>
                             ))}
                         </tbody>
-                    )
+                    );
                 })}
             </table>
         </div>
     );
-}
+};
+
+export default DatePicker;
