@@ -5,18 +5,30 @@ import { useBookingState } from "../../model/hooks/useBookingState";
 import { BookingFormData } from "../../model/booking.types";
 
 const BookingPanel = () => {
-    const { open, data, openModal, closeModal, submit, setDate, hoverDate, setHover } = useBookingState();
+    const booking = useBookingState();
 
     const dateLabel =
-        data.startDate && data.endDate
-            ? `${data.startDate.toLocaleDateString()} – ${data.endDate.toLocaleDateString()}`
+        booking.data.startDate && booking.data.endDate
+            ? `${booking.data.startDate.toLocaleDateString()} – ${booking.data.endDate.toLocaleDateString()}`
             : "Выберите даты";
 
     const handleSubmit = (formData: BookingFormData) => {
-        submit(formData);
+        booking.submit(formData);
 
-        closeModal();
+        booking.closeModal();
     }
+
+    const totalGuests = booking.data.roomsData?.reduce(
+        (acc, room) => {
+            acc.adults += room.guests.adults;
+            acc.childrenUnder7 += room.guests.childrenUnder7;
+            acc.children7to17 += room.guests.children7to17;
+            return acc;
+        },
+        { adults: 0, childrenUnder7: 0, children7to17: 0 }
+    ) ?? { adults: 2, childrenUnder7: 0, children7to17: 0 };
+
+    const roomsCount = booking.data.roomsData?.length ?? 1;
 
     return (
         <>
@@ -32,14 +44,12 @@ const BookingPanel = () => {
                         <svg xmlns="http://www.w3.org/2000/svg" width="17" height="20" viewBox="0 0 17 20" fill="none">
                             <path d="M13.1641 9.70158C13.2921 9.80162 13.5635 10.0464 13.7715 10.2504C15.588 12.0269 16.6445 14.4873 16.6445 16.936C16.6445 17.3959 16.6284 17.564 16.5645 17.768C16.3724 18.4002 15.8402 18.9285 15.208 19.1205C14.96 19.2005 14.8025 19.2006 8.32227 19.2006C1.84125 19.2006 1.68454 19.2005 1.43652 19.1205C0.804347 18.9285 0.272132 18.4002 0.0800781 17.768C0.0161166 17.564 0 17.3959 0 16.936C1.75074e-05 14.2552 1.3128 11.4904 3.40137 9.76994C3.64474 9.56648 3.7088 9.53011 3.76074 9.56975C3.79275 9.59375 3.95314 9.73802 4.11719 9.89006C4.27721 10.0381 4.57339 10.2697 4.77344 10.4018C7.218 12.0342 10.4065 11.8065 12.5791 9.84221L12.9355 9.52189L13.1641 9.70158ZM7.38672 0.059003C7.81486 -0.0170109 8.78362 -0.0209219 9.21973 0.0550967C9.9358 0.179185 10.7042 0.495699 11.2803 0.90373C11.6483 1.1639 12.232 1.74376 12.5 2.11174C12.9361 2.71984 13.2527 3.47601 13.3848 4.22014C13.4608 4.66826 13.4608 5.56498 13.3848 6.0131C13.1967 7.09337 12.6959 8.02578 11.8877 8.80998C10.8955 9.77002 9.7274 10.2377 8.32324 10.2377C7.439 10.2377 6.74663 10.0779 5.98242 9.69377C5.4943 9.44571 5.08993 9.15 4.67383 8.7299C3.68155 7.72562 3.20117 6.54502 3.20117 5.11662C3.20118 4.23642 3.3701 3.50388 3.74219 2.77971C4.22237 1.83563 5.09064 0.975897 6.01074 0.523847C6.43484 0.315822 6.97866 0.135015 7.38672 0.059003Z" fill="#266B84" />
                         </svg>
-                        {data.guests.adults} взрослых
-                        {data.guests.childrenUnder7 > 0 &&
-                            `, ${data.guests.childrenUnder7} детей младше 7`}
-                        {data.guests.children7to17 > 0 &&
-                            `, ${data.guests.children7to17} детей от 7 до 17`}
-                        , {data.rooms} {data.rooms === 1 ? "номер" : "номера"}
+                        {totalGuests.adults} взрослых
+                        {totalGuests.childrenUnder7 > 0 && `, ${totalGuests.childrenUnder7} детей до 7`}
+                        {totalGuests.children7to17 > 0 && `, ${totalGuests.children7to17} детей 7–17`}
+                        , {roomsCount} {roomsCount === 1 ? "номер" : "номера"}
                     </div>
-                    <button className="booking-modal-btn" onClick={openModal}>
+                    <button className="booking-modal-btn" onClick={booking.openModal}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                             <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#FDFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             <path d="M20.9984 21.0004L16.6484 16.6504" stroke="#FDFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -48,14 +58,20 @@ const BookingPanel = () => {
                 </div>
 
                 <BookingModal
-                    open={open}
-                    onClose={closeModal}
+                    open={booking.open}
+                    onClose={booking.closeModal}
                     onSubmit={handleSubmit}
-                    startDate={data.startDate}
-                    endDate={data.endDate}
-                    onSelectDate={setDate}
-                    hoverDate={hoverDate}
-                    onHoverDate={setHover}
+
+                    startDate={booking.data.startDate}
+                    endDate={booking.data.endDate}
+                    onSelectDate={booking.setDate}
+                    hoverDate={booking.hoverDate}
+                    onHoverDate={booking.setHover}
+
+                    data={booking.data}
+                    addRoom={booking.addRoom}
+                    removeRoom={booking.removeRoom}
+                    updateGuests={booking.updateGuests}
                 />
             </section>
         </>
