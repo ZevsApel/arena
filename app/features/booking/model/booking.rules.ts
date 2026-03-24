@@ -1,4 +1,4 @@
-import { DateRangeState, Guests } from "./booking.types";
+import { DateRangeState, Guests, Room } from "./booking.types";
 
 // Проверки для даты
 
@@ -85,21 +85,62 @@ export const getRangeState = (
 //////////////////////////////////////
 
 
-export const isGuestsValid = (guests: Guests) => {
-    const errors: Partial<Record<keyof Guests, string>> = {}
+export const BOOKING_LIMITS = {
+    maxAdults: 4,
+    maxChildrenUnder7: 3,
+    maxChildren7to17: 3,
+    maxTotalGuestsPerRoom: 5,
+}
 
-    const { adults, children7to17, childrenUnder7 } = guests;
+export const isRoomsDataValid = (roomsData: Room[]) => {
+    if(!roomsData.length) return false;
+
+    for (const room of roomsData) {
+        const { valid } = isGuestsValid(room.guests);
+        if(!valid) return false;
+    }
+
+    return true;
+}
+
+export const isGuestsValid = (guests: Guests) => {
+    const errors: Partial<Record<keyof Guests | "total", string>> = {}
+
+    const {
+        adults,
+        children7to17,
+        childrenUnder7
+    } = guests;
+
+    const total =
+        adults + children7to17 + childrenUnder7;
 
     if (!Number.isFinite(adults) || adults <= 0) {
         errors.adults = "Минимум 1 взрослый"
+    }
+
+    if (adults > BOOKING_LIMITS.maxAdults) {
+        errors.adults = `Максимум ${BOOKING_LIMITS.maxAdults}`
     }
 
     if (!Number.isFinite(childrenUnder7) || childrenUnder7 < 0) {
         errors.childrenUnder7 = "Некорректное количество"
     }
 
+    if (childrenUnder7 > BOOKING_LIMITS.maxChildrenUnder7) {
+        errors.childrenUnder7 = `Максимум ${BOOKING_LIMITS.maxChildrenUnder7}`
+    }
+
     if (!Number.isFinite(children7to17) || children7to17 < 0) {
         errors.children7to17 = "Некорректное число"
+    }
+
+    if (children7to17 > BOOKING_LIMITS.maxChildren7to17) {
+        errors.children7to17 = `Максимум ${BOOKING_LIMITS.maxChildren7to17}`
+    }
+
+    if (total > BOOKING_LIMITS.maxTotalGuestsPerRoom) {
+        errors.total = `Максимум ${BOOKING_LIMITS.maxTotalGuestsPerRoom} гостей в номере`
     }
 
     return {
