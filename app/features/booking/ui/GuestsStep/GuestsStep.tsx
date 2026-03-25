@@ -29,7 +29,7 @@ const GuestsStep = ({
                             padding: "16px 0",
                         }}
                     >
-                        {/* Заголовок */}
+                        
                         <div style={{
                             display: "flex",
                             justifyContent: "space-between",
@@ -46,7 +46,7 @@ const GuestsStep = ({
                             )}
                         </div>
 
-                        {/* Взрослые */}
+                        
                         <Row
                             label="Взрослые"
                             value={g.adults}
@@ -57,7 +57,7 @@ const GuestsStep = ({
                             }
                         />
 
-                        {/* Дети до 7 */}
+                        
                         <Row
                             label="Дети до 7"
                             value={g.childrenUnder7}
@@ -72,7 +72,7 @@ const GuestsStep = ({
                             }
                         />
 
-                        {/* Дети 7-17 */}
+                        
                         <Row
                             label="Дети 7–17"
                             value={g.children7to17}
@@ -94,7 +94,7 @@ const GuestsStep = ({
                 );
             })}
 
-            {/* КНОПКА В САМОМ НИЗУ */}
+            
             <div style={{ marginTop: 16 }}>
                 <button onClick={addRoom}>
                     + Добавить номер

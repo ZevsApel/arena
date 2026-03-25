@@ -1,8 +1,8 @@
 
-export type ButtonVatiant = "find" | "booking" | "resume" | "minus" | "plus" | "aroow_left" | "arrow_right" | "number_date";
+export type ButtonVariant = "find" | "booking" | "resume" | "minus" | "plus" | "aroow_left" | "arrow_right" | "number_date" | "bordered";
 
 export interface ButtonProps {
     text: string;
-    variant?: ButtonVatiant;
+    variant?: ButtonVariant;
     onClick:() => void; 
 }

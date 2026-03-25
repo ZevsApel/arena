@@ -15,4 +15,6 @@ export interface BookingModalProps {
     addRoom: () => void;
     removeRoom: (id: string) => void;
     updateGuests: (roomId: string, guests: Partial<Guests>) => void;
+
+    reset: () => void;
 }
