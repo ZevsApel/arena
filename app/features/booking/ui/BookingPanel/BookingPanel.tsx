@@ -72,6 +72,8 @@ const BookingPanel = () => {
                     addRoom={booking.addRoom}
                     removeRoom={booking.removeRoom}
                     updateGuests={booking.updateGuests}
+
+                    reset={booking.reset}
                 />
             </section>
         </>

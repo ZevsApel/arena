@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BookingFormData, Guests, Room } from "../booking.types";
 import { validateBooking } from "../validateBooking";
 import { BOOKING_LIMITS, isRoomsDataValid } from "../booking.rules";
+import { create } from "domain";
 
 
 const createRoom = (): Room => ({
@@ -48,6 +49,13 @@ const clampGuests = (guests: Guests): Guests => {
 
     return { adults, children7to17, childrenUnder7 }
 }
+
+const getDefaultState = (): BookingFormData => ({
+    startDate: null,
+    endDate: null,
+
+    roomsData: [createRoom()],
+})
 
 
 
@@ -162,6 +170,11 @@ export const useBookingState = () => {
         });
     };
 
+    const reset = () => {
+        setData(getDefaultState());
+        setHoverDate(null);
+    }
+
 
     return {
         open,
@@ -178,5 +191,7 @@ export const useBookingState = () => {
         addRoom,
         removeRoom,
         updateGuests,
+
+        reset
     };
 }
