@@ -17,14 +17,14 @@ const LocalTime = () => {
         }
 
         updateTime();
-        const interval =setInterval(updateTime, 1000);
+        const interval = setInterval(updateTime, 1000);
 
         return () => clearInterval(interval);
     }, []);
 
     return (
         <div className="local-time">
-            Местное время: {time}
+            Местное время – {time}
         </div>
     );
 }
