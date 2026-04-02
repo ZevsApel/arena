@@ -14,15 +14,15 @@ const DatePicker = ({ startDate, endDate, onSelectDate, onHoverDate, hoverDate }
         new Intl.DateTimeFormat('ru-RU', { month: 'long' }).format(date);
 
     return (
-        <div className="date-picker-container">
-            <p className="date-picker-title">Дата поездки</p>
+        <div className="date-picker">
+            <p className="date-picker__title">Дата поездки</p>
 
-            <table className="weekday-header">
+            <table className="weekday__table">
                 <thead>
-                    <tr>
+                    <tr className="date-picker__weekdays">
                         {daysOfWeek.map((day) => (
-                            <th key={day} className="day-name">
-                                <div className="weekday-names">{day}</div>
+                            <th key={day} className="date-picker__weekday">
+                                <div className="date-picker__day__number">{day}</div>
                             </th>
                         ))}
                     </tr>
@@ -37,17 +37,17 @@ const DatePicker = ({ startDate, endDate, onSelectDate, onHoverDate, hoverDate }
                     const lastDayOfMonth = new Date(year, monthNumber + 1, 0);
 
                     return (
-                        <tbody key={monthNumber} className="weekdays-table">
+                        <tbody key={monthNumber} className="date-picker__body">
 
                             {/* Заголовок месяца */}
-                            <tr className="month-row">
-                                <td colSpan={7} className="month-title">
+                            <tr className="date-picker__month-row">
+                                <td colSpan={7} className="date-picker__month__title">
                                     {getMonthName(month)} {year}
                                 </td>
                             </tr>
 
                             {daysMatrix.map((row, rowId) => (
-                                <tr key={rowId} className="weekdays-table-row">
+                                <tr key={rowId} className="date-picker__week">
                                     {row.map((day, cellId) => {
                                         if (!day) return <td key={cellId} />;
 

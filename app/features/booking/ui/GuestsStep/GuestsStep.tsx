@@ -9,7 +9,7 @@ const GuestsStep = ({
     updateGuests,
 }: GuestsStepProps) => {
     return (
-        <div>
+        <div className="guests-step">
             {data.roomsData?.map((room, index) => {
                 const g = room.guests;
 
@@ -24,17 +24,10 @@ const GuestsStep = ({
                 return (
                     <div
                         key={room.id}
-                        style={{
-                            borderBottom: "1px solid #eee",
-                            padding: "16px 0",
-                        }}
+                        className="guests-step__room"
                     >
                         
-                        <div style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            marginBottom: 10
-                        }}>
+                        <div className="guests-step__room-header">
                             <strong>Номер {index + 1}</strong>
 
                             {data.roomsData.length > 1 && (
@@ -87,7 +80,7 @@ const GuestsStep = ({
                             }
                         />
 
-                        <div style={{ fontSize: 12, opacity: 0.6 }}>
+                        <div className="guests-step__total">
                             Всего: {total} / {BOOKING_LIMITS.maxTotalGuestsPerRoom}
                         </div>
                     </div>
@@ -95,7 +88,7 @@ const GuestsStep = ({
             })}
 
             
-            <div style={{ marginTop: 16 }}>
+            <div className="guests-step__actions">
                 <button onClick={addRoom}>
                     + Добавить номер
                 </button>

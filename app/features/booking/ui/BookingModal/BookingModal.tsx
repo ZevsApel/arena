@@ -71,7 +71,7 @@ const BookingModal = ({
                         updateGuests={updateGuests}
                     />
                 </div>
-                <div className="booking-modal__buttons">
+                <div className="booking-modal__actions">
                     <Button text="Очистить" variant="bordered" onClick={handleResetClick} />
                     <Button text="Продолжить" variant="resume" onClick={handleNextStep} />
                 </div>
