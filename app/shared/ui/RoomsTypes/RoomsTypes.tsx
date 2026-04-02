@@ -4,16 +4,14 @@ import Link from "next/link";
 
 const RoomsTypes = ({ items }: RoomProps) => {
     return (
-        <div className="rooms-types">
+        <div className="room-types">
             {items.map((item, itemId) => (
-                <div className={`rooms-type ${itemId === 0 ? 'room-type__big' : ''}`} key={itemId}>
-                    <Link href={item.link}>
-                        <div className="rooms-type__image-block">
+                <div className={`room-types__item ${itemId === 0 ? 'room-types__item--big' : ''}`} key={itemId}>
+                    <Link href={item.link} className="room-types__link">
+                        <div className="room-types__item-image">
                             <Image src={item.image} alt={item.name} />
                         </div>
-                        <div className="rooms-type__name-block">
-                            <p className="rooms-type__name">{item.name}</p>
-                        </div>
+                        <p className="room-types__item-name">{item.name}</p>
                     </Link>
                 </div>
             ))}

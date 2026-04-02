@@ -2,17 +2,10 @@ import { RowProps } from "../../../model/booking.types";
 
 const Row = ({ label, value, min, max, onChange }: RowProps) => {
     return (
-        <div
-            style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 8,
-            }}
-        >
-            <span>{label}</span>
+        <div className="guests-step__row">
+            <span className="guests-step__label">{label}</span>
 
-            <div style={{ display: "flex", gap: 8 }}>
+            <div className="guests-step__controls">
                 <button
                     onClick={() => onChange(value - 1)}
                     disabled={value <= min}
@@ -20,7 +13,7 @@ const Row = ({ label, value, min, max, onChange }: RowProps) => {
                     -
                 </button>
 
-                <span>{value}</span>
+                <span className="guests-step__value">{value}</span>
 
                 <button
                     onClick={() => onChange(value + 1)}
